@@ -1,6 +1,6 @@
 import streamlit as st
 from instagrapi import Client
-import random
+import os
 import json
 import pandas as pd
 
@@ -75,7 +75,12 @@ def app():
         try:
             st.write("🔐 Logging in...")
             cl = Client()
-            cl.login(username_input, password_input)
+            if os.path.exists("settings.json"):
+                cl.load_settings("settings.json")
+                cl.login(username_input, password_input)
+            else:
+                cl.login(username_input, password_input)
+                cl.dump_settings("settings.json")
 
             media_pk = cl.media_pk_from_url(post_url)
             st.write("🔍 Getting likers...")
